@@ -141,23 +141,98 @@ function hideBio(element) {
   title="Back to top"
   ><i class="fas fa-angle-up"></i><span class="sr-only">Back to top</span>
 </div>
+<style>
+  .slider-dimensions {
+  width: 100vw;
+  aspect-ratio: 3;
+}
+.slider {
+  position: absolute;
+  display: flex;
+  transform: translateX(-0%);
+  transition: transform 1s;
+}
 
+.slider > div {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
+
+</style>
 <!-- Hero -->
 <header id="hero" class="fragment hero">
+ <!-- style="background-image:url(images/uos.jpg)" -->
     <div
-      style="background-image:url(images/uos.jpg)"
       class="jumbotron text-center header-image mb-0 bg-text_light">
+ 
+      <div class="slider">
+        <div data-img-url="images/uos.jpg" class="slider-dimensions"></div>
+        <div data-img-url="images/turing.jpg" class="slider-dimensions"></div>
+      </div>
+
     <div id="hero-particles-js" class="particles-js"></div>
       <div class="row justify-content-center align-items-start">
-        <div class="overlay lead text-white"><div style='margin-top: 200px;margin-bottom: 100px;' ><font size=6, color=white>5th International Joint Conference on Learning &amp; Reasoning <br> 12 - 14 September 2025</font></p><div></div>
+        <div class="overlay lead text-white">
+          <div style='margin-top: 200px;margin-bottom: 100px;' >
+            <font size=6, color=white>5th International Joint Conference on Learning &amp; Reasoning <br> 12 - 14 September 2025</font></p>
+            </div>
       </div>
   </div>
+  </div>
+  
 </header>
+
+
 <script>
   var fragmentName = "hero";window.syna.api.register("hero", "hero-" + fragmentName, {
     selector: "hero-particles-js",
     config: null,
   });
+
+  const imgs = document.querySelectorAll('[data-img-url]');
+
+imgs.forEach((div) => {
+  div.style.backgroundImage = `url(./${div.getAttribute('data-img-url')})`;
+});
+const slider = document.querySelector('.slider');
+
+const arrowButtons = document.querySelectorAll('[data-index-change]');
+let currIndex = 0;
+function slide(nextIndex) {
+  if (nextIndex < 0) nextIndex = imgs.length - 1;
+  if (nextIndex >= imgs.length) nextIndex = 0;
+
+  slider.style.transform = `translateX(-${(nextIndex / imgs.length) * 100}%)`;
+  currIndex = nextIndex;
+}
+
+
+arrowButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const indexChange = +button.getAttribute('data-index-change');
+    slide(currIndex + indexChange);
+  });
+});
+const navContainer = document.querySelector('.nav-container');
+let id;
+let isSliding = false;
+
+function startAutoSlide() {
+  if (!isSliding) {
+    id = setInterval(() => slide(currIndex + 1), 5000);
+    isSliding = true;
+  }
+};
+
+function stopAutoSlide() {
+  clearInterval(id);
+  isSliding = false;
+};
+
+startAutoSlide();
 </script>
 
 
